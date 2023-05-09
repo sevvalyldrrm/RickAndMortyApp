@@ -14,24 +14,68 @@ const Stack = createStackNavigator();
 
 const CharacterStack = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="CharacterScreen" component={Characters} />
-      <Stack.Screen name="CharacterDetailScreen" component={CharactersDetail} />
+    <Stack.Navigator >
+      <Stack.Screen name="CharacterScreen" component={Characters} 
+       options={{
+          title: 'Characters',
+          headerStyle: {
+            backgroundColor: '#5CAD4A',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      />
+      <Stack.Screen name="CharacterDetailScreen" component={CharactersDetail} 
+       options={{
+        title: "Character's Detail",
+        headerStyle: {
+          backgroundColor: '#5CAD4A',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+      />
     </Stack.Navigator>
   );
 };
 
 const EpisodeStack = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="EpisodeScreen" component={Episodes} />
+    <Stack.Navigator >
+      <Stack.Screen name="EpisodeScreen" component={Episodes}
+        options={{
+          title: "Episodes",
+          headerStyle: {
+            backgroundColor: '#5CAD4A',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      />
     </Stack.Navigator>
   );
 };
 const LocationStack = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="LocationScreen" component={Locations} />
+      <Stack.Screen name="LocationScreen" component={Locations} 
+       options={{
+        title: "Locations",
+        headerStyle: {
+          backgroundColor: '#5CAD4A',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}
+      />
     </Stack.Navigator>
   );
 };
@@ -39,10 +83,10 @@ const LocationStack = () => {
 export default function App() {
   const scheme = useColorScheme();
   return (
-    <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <NavigationContainer theme={scheme == 'dark' ? DarkTheme : DefaultTheme}>
       <Tab.Navigator
         screenOptions={{
-          tabBarActiveTintColor: '#5CAD4A',
+          tabBarActiveTintColor: '#F0F2EB',
           tabBarInactiveTintColor: '#208D45',
           tabBarShowLabel: false,
           tabBarStyle: {
@@ -53,7 +97,7 @@ export default function App() {
             elevation: 0,
             borderRadius: 15,
             height: '8%',
-            backgroundColor: 'white',
+            backgroundColor: '#5CAD4A',
             ...styles.shadow,
           },
           headerShown: false,
