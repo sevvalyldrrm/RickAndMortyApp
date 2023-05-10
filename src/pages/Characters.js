@@ -1,7 +1,8 @@
-import {View, Text, Button, FlatList, StyleSheet, Image} from 'react-native';
-import React, {useState} from 'react';
+import {View, Text, Button, FlatList, StyleSheet, Image , Dimensions} from 'react-native';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import { ActivityIndicator } from 'react-native-paper';
 
 export const CharacterCard = ({character}) => {
   return (
@@ -9,38 +10,57 @@ export const CharacterCard = ({character}) => {
       <View style={styles.container}>
         <Image style={styles.image} source={{uri: character.image}} />
         <View style={styles.bodyContainer}>
-          <Text>{character.name}</Text>
-          <Text>{character.status}</Text>
+          <Text style={styles.name} >{character.name}</Text>
+          <Text>{character.status} - {character.species}</Text>
         </View>
       </View>
     </TouchableWithoutFeedback>
   );
 };
+const URL = 'https://rickandmortyapi.com/api/character'
 
 const Characters = () => {
-  const [character, setCharacter] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [characters, setCharacters] = useState([]);
 
   async function fetchData() {
-    const response = await axios.get(
-      'https://rickandmortyapi.com/api/character',
-    );
-    setCharacter(response.data.results);
+    try {
+      const result = await axios.get(URL);
+      const {info, results} = result.data;
+      let pages = [results];
+      setLoading(false);
 
-    // const responsenext = await axios.get(
-    //   response.data.info.next
-    // );
+      for (let i=2; i<=info.pages; i++){
+        const res = await axios.get(`${URL}?page=${i}`);
+        pages.push(res.data.results);
+      }
+
+      const flattenedPages = pages.flat();
+      const filteredCharacters = flattenedPages.filter((char => char.id >= 0 && char.id <= 100));
+
+      setCharacters(filteredCharacters)
+    } catch (error) {
+      console.error(error);
+    }
   }
+
+  useEffect(() => {
+    fetchData();
+  } , [])
 
   const renderItem = ({item}) => <CharacterCard character={item} />;
 
   return (
     <View>
-      <FlatList
-        data={character}
+      {loading ? (
+        <ActivityIndicator size="large"/>
+      ) : (
+        <FlatList
+        data={characters}
         renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={({id}) => id.toString()}
       />
-      <Button title="Fetch Data" onPress={fetchData} />
+      )}
     </View>
   );
 };
@@ -48,8 +68,28 @@ const Characters = () => {
 export default Characters;
 
 const styles = StyleSheet.create({
+  container : {
+    flex : 1,
+    borderWidth : 1,
+    borderRadius : 8,
+    margin : 10,
+    flexDirection : 'row'
+  },
+  bodyContainer : {
+    paddingTop : 5,
+    paddingHorizontal : 15
+  },
   image : {
-    width : 50,
-    height : 50
-  }
+    resizeMode : 'contain',
+    margin : 5,
+    borderRadius : 8,
+    height : Dimensions.get('window').height / 5.5,
+    width : Dimensions.get('window').width / 2.8,
+    opacity : 2
+  },
+  name : {
+    fontSize : 17,
+    fontWeight : '700'
+  },
+
 });
