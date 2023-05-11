@@ -1,8 +1,8 @@
-import {View, Text, Button, FlatList, StyleSheet, Image , Dimensions} from 'react-native';
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import React from 'react';
+import {View, Text, FlatList, StyleSheet, Image , Dimensions, TouchableWithoutFeedback} from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
+import {REACT_APP_DENEME} from '@env';
+import useFetch from '../hooks/useFetch';
 
 export const CharacterCard = ({character}) => {
   return (
@@ -11,43 +11,14 @@ export const CharacterCard = ({character}) => {
         <Image style={styles.image} source={{uri: character.image}} />
         <View style={styles.bodyContainer}>
           <Text style={styles.name} >{character.name}</Text>
-          <Text>{character.status} - {character.species}</Text>
+          <Text style={styles.status}>{character.status} - {character.species}</Text>
         </View>
       </View>
     </TouchableWithoutFeedback>
   );
 };
-const URL = 'https://rickandmortyapi.com/api/character'
-
 const Characters = () => {
-  const [loading, setLoading] = useState(true);
-  const [characters, setCharacters] = useState([]);
-
-  async function fetchData() {
-    try {
-      const result = await axios.get(URL);
-      const {info, results} = result.data;
-      let pages = [results];
-      setLoading(false);
-
-      for (let i=2; i<=info.pages; i++){
-        const res = await axios.get(`${URL}?page=${i}`);
-        pages.push(res.data.results);
-      }
-
-      const flattenedPages = pages.flat();
-      const filteredCharacters = flattenedPages.filter((char => char.id >= 0 && char.id <= 100));
-
-      setCharacters(filteredCharacters)
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  useEffect(() => {
-    fetchData();
-  } , [])
-
+  const {loading, characters} = useFetch(REACT_APP_DENEME);
   const renderItem = ({item}) => <CharacterCard character={item} />;
 
   return (
@@ -77,7 +48,7 @@ const styles = StyleSheet.create({
   },
   bodyContainer : {
     paddingTop : 5,
-    paddingHorizontal : 15
+    paddingHorizontal : 15,
   },
   image : {
     resizeMode : 'contain',
@@ -91,5 +62,9 @@ const styles = StyleSheet.create({
     fontSize : 17,
     fontWeight : '700'
   },
+  status : {
+    paddingVertical : 10,
+    fontWeight : '500'
+  }
 
 });
