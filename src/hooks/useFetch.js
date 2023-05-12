@@ -10,6 +10,7 @@ function useFetch(url){
         const result = await axios.get(url);
         const {info, results} = result.data;
         let pages = [results];
+        
         setLoading(false);
   
         for (let i=2; i<=info.pages; i++){

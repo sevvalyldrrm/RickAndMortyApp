@@ -1,12 +1,12 @@
 import React from 'react';
 import {View, Text, FlatList, StyleSheet, Image , Dimensions, TouchableWithoutFeedback} from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
-import {REACT_APP_DENEME} from '@env';
+import {REACT_APP_RM} from '@env';
 import useFetch from '../hooks/useFetch';
 
-export const CharacterCard = ({character}) => {
+export const CharacterCard = ({character, onSelect}) => {
   return (
-    <TouchableWithoutFeedback>
+    <TouchableWithoutFeedback onPress={onSelect}>
       <View style={styles.container}>
         <Image style={styles.image} source={{uri: character.image}} />
         <View style={styles.bodyContainer}>
@@ -17,11 +17,16 @@ export const CharacterCard = ({character}) => {
     </TouchableWithoutFeedback>
   );
 };
-const Characters = () => {
-  const {loading, characters} = useFetch(REACT_APP_DENEME);
-  const renderItem = ({item}) => <CharacterCard character={item} />;
+const Characters = ({navigation}) => {
+  const {loading, characters} = useFetch(REACT_APP_RM+"/character");
 
+ const handleCharacterDetailSelect = (id => {
+  navigation.navigate('CharacterDetailScreen' , {id});
+ })
+
+  const renderItem = ({item}) => <CharacterCard character={item}  onSelect={() => handleCharacterDetailSelect(item.id)}/>;
   return (
+    
     <View>
       {loading ? (
         <ActivityIndicator size="large"/>
@@ -42,25 +47,27 @@ const styles = StyleSheet.create({
   container : {
     flex : 1,
     borderWidth : 1,
-    borderRadius : 8,
+    borderRadius : 10,
     margin : 10,
-    flexDirection : 'row'
+    flexDirection : 'row',
+    backgroundColor : '#454545'
   },
   bodyContainer : {
     paddingTop : 5,
     paddingHorizontal : 15,
+    flex : 1
   },
   image : {
     resizeMode : 'contain',
     margin : 5,
-    borderRadius : 8,
+    borderRadius : 10,
     height : Dimensions.get('window').height / 5.5,
     width : Dimensions.get('window').width / 2.8,
     opacity : 2
   },
   name : {
     fontSize : 17,
-    fontWeight : '700'
+    fontWeight : '700',
   },
   status : {
     paddingVertical : 10,
