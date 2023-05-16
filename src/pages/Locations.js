@@ -16,7 +16,7 @@ export const LocationCard = ({character}) => {
   )
 }
 const Locations = () => {
-  const {loading, characters} = useFetch(REACT_APP_RM+"/location");
+  const {loading, data} = useFetch(REACT_APP_RM+"/location");
   const renderItem = ({item}) => <LocationCard character={item}/>;
 
   return (
@@ -25,7 +25,7 @@ const Locations = () => {
       <ActivityIndicator size="large"/>
     ) : (
       <FlatList
-      data={characters}
+      data={data}
       renderItem={renderItem}
       keyExtractor={({id}) => id.toString()}
     />

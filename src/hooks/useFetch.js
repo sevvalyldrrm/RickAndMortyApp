@@ -3,7 +3,7 @@ import axios from 'axios';
 
 function useFetch(url){
     const [loading, setLoading] = useState(true);
-    const [characters, setCharacters] = useState([]);
+    const [data, setData] = useState([]);
   
     async function fetchData() {
       try {
@@ -21,7 +21,7 @@ function useFetch(url){
         const flattenedPages = pages.flat();
         const filteredCharacters = flattenedPages.filter((char => char.id >= 0 && char.id <= 100));
   
-        setCharacters(filteredCharacters)
+        setData(filteredCharacters)
       } catch (error) {
         console.error(error);
       }
@@ -30,7 +30,7 @@ function useFetch(url){
     useEffect(() => {
       fetchData();
     } , [])
-  return {loading , characters}
+  return {loading , data}
 }
 
 export default useFetch;

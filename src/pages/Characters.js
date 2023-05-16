@@ -18,7 +18,7 @@ export const CharacterCard = ({character, onSelect}) => {
   );
 };
 const Characters = ({navigation}) => {
-  const {loading, characters} = useFetch(REACT_APP_RM+"/character");
+  const {loading, data} = useFetch(REACT_APP_RM+"/character");
 
  const handleCharacterDetailSelect = (id => {
   navigation.navigate('CharacterDetailScreen' , {id});
@@ -32,7 +32,7 @@ const Characters = ({navigation}) => {
         <ActivityIndicator size="large"/>
       ) : (
         <FlatList
-        data={characters}
+        data={data}
         renderItem={renderItem}
         keyExtractor={({id}) => id.toString()}
       />
